@@ -4,6 +4,7 @@ Code to replicate the results of the manuscript submission to ICLR 2026 titled -
 ## Overview
 
 This repository contains the implementation of the information-theoretic framework for analyzing the fundamental trade-offs between detectability and robustness in LLM watermarking schemes. 
+![Watermarking schemes in modern LLMs exhibit a trade-off between detectability via statistical tests and robustness against LLM output editing.](figures/HLV3.pdf)
 
 ## Installation
 
