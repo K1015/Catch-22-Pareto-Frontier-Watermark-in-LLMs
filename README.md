@@ -30,6 +30,13 @@ pip install -r requirements.txt
 
 ## Model Access
 
+### Accessing Llama 2-7B Model
+
+This work uses the Llama 2-7B model, which requires:
+- **Minimum GPU Memory**: 16GB VRAM (with 8-bit quantization) or 28GB VRAM (full precision)
+- **Recommended**: NVIDIA RTX A4000 (16GB) or better for quantized inference
+- **Optimal**: NVIDIA A100 (40GB) or H100 for full precision and faster generation
+
 ### Accessing Llama 2 Models
 
 To use Llama 2 models, you need to request access from Meta and authenticate with Hugging Face:
