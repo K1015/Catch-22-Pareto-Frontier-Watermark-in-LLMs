@@ -60,11 +60,7 @@ First, download the LFQA dataset by running the following command:
 cd Llama2-Watermark/data
 bash download_data.sh
 ```
-
-This will download and prepare:
-- Long-Form Question Answering (LFQA) dataset
-- ELI5 dataset for additional evaluation
-- Pre-processed evaluation splits
+This will download and prepare the Long-Form Question Answering (LFQA) dataset.
 
 ## Generating Watermarked Text
 
