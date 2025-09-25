@@ -1,0 +1,15 @@
+{
+  "total_samples": 5,
+  "detection_rate": 1.0,
+  "mean_z_score": 6.83214501304153,
+  "std_z_score": 1.4007210181876377,
+  "median_z_score": 6.8349386272907475,
+  "mean_green_ratio": 0.21619934562721613,
+  "expected_metrics": {
+    "AUROC": "1.000 (based on paper)",
+    "TPR@1%": "1.000 (based on paper)",
+    "F1@1%": "0.995 (based on paper)",
+    "p_score": "0.31 (based on paper)",
+    "z_score_expected": "3.2 (bias-free, moderate detectability)"
+  }
+}
