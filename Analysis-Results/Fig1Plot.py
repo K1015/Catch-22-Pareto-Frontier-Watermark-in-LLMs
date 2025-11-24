@@ -67,7 +67,7 @@ ax.axhline(y=0.7, color='darkgray', linestyle=':', alpha=0.3, linewidth=1.5)
 ax.axhline(y=1.0, color='darkgray', linestyle=':', alpha=0.3, linewidth=1.5)
 
 # Set scales
-ax.set_xscale('log')
+ax.set_xscale('linear')
 ax.set_yscale('linear')
 
 # Labels and formatting
