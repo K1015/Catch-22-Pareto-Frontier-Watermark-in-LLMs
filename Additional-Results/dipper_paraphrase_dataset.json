@@ -5,7 +5,7 @@
     "target_edit_rate": 0.25,
     "adjusted_epsilon": 0.5,
     "token_length": 100,
-    "paraphrase_method": "DIPPER-style (mixture of Gaussians position-dependent)",
+    "paraphrase_method": "DIPPER-style",
     "overall_average_edit_rate": 0.2391,
     "edit_rate_std": 0.0484
   },

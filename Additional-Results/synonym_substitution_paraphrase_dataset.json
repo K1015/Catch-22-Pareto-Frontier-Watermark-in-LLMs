@@ -5,7 +5,7 @@
     "target_edit_rate": 0.15,
     "adjusted_epsilon": 0.3947,
     "token_length": 100,
-    "paraphrase_method": "Synonym-substitution style, chaotic with positional ramp",
+    "paraphrase_method": "Synonym-substitution style",
     "overall_average_edit_rate": 0.1564,
     "edit_rate_std": 0.0342
   },
