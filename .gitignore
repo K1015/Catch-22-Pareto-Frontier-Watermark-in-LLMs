@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.venv/
+outputs/
+logs/
+*.log
+*.sbatch
+*.slurm
+slurm/
+hpc/
+.mypy_cache/
+.pytest_cache/
+*.egg-info/

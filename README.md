@@ -1,129 +1,153 @@
 # Catch-22: Pareto Frontier for Detectability and Robustness in LLM Watermarking
 
-This repository contains the code to replicate the results of the manuscript submission to ICML 2026 titled - "Catch-22: Pareto Frontier for Detectability and Robustness in LLM Watermarking".
+LLM watermarking has its own Catch-22[^catch22-name]: watermarks that are easy to verify are often easier to notice, while watermarks that stay hidden are easier to remove with edits.
+
+[^catch22-name]: The name alludes to Joseph Heller's *Catch-22*, a paradoxical dilemma in which one decision cannot be made without negating another. In the context of LLMs, watermarks face an analogous bind: improving robustness often makes them more detectable, while reducing detectability weakens their robustness.
+
+This repository is a standalone reproduction package for the accepted ICML 2026 paper "Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking" by Kuheli Pratihar and Debdeep Mukhopadhyay.
+
+The experiments focus on Long-Form Question Answering (LFQA), where a model writes detailed answers to open-ended questions. The supported model setups are:
+
+- `meta-llama/Llama-2-7b-hf`
+- `mistralai/Mistral-7B-v0.1`
+
+The included runs evaluate every implemented watermark method, including the `hybrid` method. They measure detection on clean outputs and robustness after two edit attacks: a moderate Dipper rewrite and a stronger summary-style paraphrase.
 
 ## Overview
 
-Large language models generate text through probabilistic token sampling, a mechanism increasingly leveraged for inference-time watermarking to verify AI-generated content. We present an information-theoretic framework that characterizes the trade-off between robustness to text editing and detectability by keyless observers, where detectability bounds are information-theoretic and computational attainability depends on detector access. Central to our analysis is an additive, usable Kullback-Leibler (KL) information budget that governs hypothesis testing separability between watermarked and unwatermarked outputs subject to a stealth constraint. This budget induces a hierarchy of detectability across watermark families: distribution-preserving schemes exhibit zero statistical drift, while probability-modifying schemes at both token and sentence levels accumulate detectable signal with sequence length. When text editing is modeled as a noise process, the usable KL budget contracts quadratically with edit rate for token-level schemes and according to an induced semantic flip rate for sentence-level schemes. These contraction laws reveal an irreducible trilemma among robustness, stealth, and reliable verification. Guided by these limits, we propose a hybrid watermarking strategy that selects among distribution-preserving, semantic-level, and token-level methods based on anticipated editing regimes. Experiments on Llama-2-7B and Mistral-7B under paraphrasing attacks corroborate theoretical predictions and confirm that the hybrid strategy is empirically near-Pareto across evaluated edit regimes.
+Large language models generate text by sampling tokens, a process now widely used for inference-time watermarking that verifies AI-generated content. We present an information-theoretic framework that captures the trade-off between robustness to text edits and detectability by observers who lack the watermark key or use a keyless detector.
+
+The bounds hold regardless of computational power, and what a keyless detector can achieve depends on what it can observe about the model and its outputs. At the heart of the analysis is an additive Kullback-Leibler (KL) information measure that quantifies how well a hypothesis test can distinguish watermarked from unwatermarked text while the watermark remains stealthy. The measure remains zero for distribution-preserving schemes and increases with text length for token-level and sentence-level probability-modifying schemes.
+
+When edits are modeled as noise, the KL measure shrinks quadratically with the edit rate for token-level schemes and with an induced semantic flip rate for sentence-level schemes. This shrinkage exposes an unavoidable trilemma among robustness, stealth, and reliable verification. Guided by these limits, we use a hybrid watermarking strategy that selects the Pareto-optimal scheme among distribution-preserving, semantic-level, and token-level methods based on the expected editing regime at deployment.
+
+Experiments on Llama-2-7B and Mistral-7B under paraphrasing attacks corroborate the theoretical predictions and show that the hybrid strategy lies near the Pareto frontier across the evaluated edit regimes.
 
 ![Watermarking schemes in modern LLMs exhibit a trade-off between detectability via statistical tests and robustness against LLM output editing.](figures/HLV.png)
+
 Figure: Watermarking schemes in modern LLMs exhibit a trade-off between detectability via statistical tests and robustness against LLM output editing.
+
+## Citation
+
+If you use this repository, please cite the paper:
+
+```bibtex
+@inproceedings{pratihar2026catch22,
+  title = {Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking},
+  author = {Pratihar, Kuheli and Mukhopadhyay, Debdeep},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
+  year = {2026},
+  url = {https://icml.cc/virtual/2026/poster/66807}
+}
+```
+
+Paper page: https://icml.cc/virtual/2026/poster/66807
+
+## Methods and Conditions
+
+Watermark methods:
+
+`kgw`, `unigram`, `dipmark`, `hcw`, `heavywater`, `simplexwater`, `kuditipudi`, `semstamp`, `pmark`, `simmark`, `cgw`, `gaussmark`, `dawa`, `hybrid`.
+
+Default conditions:
+
+- `clean`: no paraphrasing attack.
+- `dipper_moderate`: moderate paraphrasing using the Dipper paraphraser setting.
+- `extreme_paraphrase`: stronger summarization-style rewrite.
 
 ## Installation
 
-### Setting up Conda Environment
-
-We recommend using a conda environment for reproducibility:
-
 ```bash
-# Create a new conda environment
-conda create -n llm-watermark python=3.10
-conda activate llm-watermark
-
-# Install PyTorch with CUDA support (adjust CUDA version as needed)
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-
-# Install remaining dependencies
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -e .
 ```
 
-## Model Access
-
-### Accessing Llama 2-7B Model
-
-This work uses the Llama 2-7B model, which requires:
-- **Minimum GPU Memory**: 16GB VRAM (with 8-bit quantization) or 28GB VRAM (full precision)
-- **Recommended**: NVIDIA RTX A4000 (16GB) or better for quantized inference
-- **Optimal**: NVIDIA A100 (40GB) or H100 for full precision and faster generation
-
-### Accessing Llama 2 Models
-
-To use Llama 2 models, you need to request access from Meta and authenticate with Hugging Face:
-
-1. **Request Access from Meta**:
-   - Visit [Meta's Llama 2 page](https://ai.meta.com/resources/models-and-libraries/llama-downloads/)
-   - Fill out the access request form
-   - Wait for approval (typically 24-48 hours)
-
-2. **Link to Hugging Face**:
-   - Create a [Hugging Face account](https://huggingface.co/join) if you don't have one
-   - Visit the [Llama 2 model page](https://huggingface.co/meta-llama/Llama-2-7b-hf)
-   - Request access using the same email as your Meta request
-   - Once approved, you'll receive confirmation
-
-3. **Authenticate Locally**:
-   ```bash
-   huggingface-cli login
-   # Enter your Hugging Face access token when prompted
-   ```
-
-4. **Verify Access**:
-   ```python
-   from transformers import AutoModelForCausalLM
-   model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
-   ```
-
-## Data Preparation
-
-First, download the LFQA dataset by running the following command:
+For GPU inference with quantized 7B models, install a PyTorch build matching your CUDA stack. If you use gated model checkpoints, authenticate with Hugging Face before running the full pipeline:
 
 ```bash
-cd Llama2-Watermark/data
-bash download_data.sh
+huggingface-cli login
 ```
-This will download and prepare the Long-Form Question Answering (LFQA) dataset.
 
-## Generating Watermarked Text
+## Data
 
-### Basic Usage
+The expected LFQA input file is:
 
-You can generate watermarked text by running the following command:
+```text
+data/lfqa/inputs.jsonl
+```
+
+The repository includes a three-row example file for environment checks. Replace it with the paper LFQA prompts for full reproduction. Each row must include a `prompt` field and may include `id` and `reference`.
+
+## Environment Check
+
+The local backend exercises the complete pipeline without downloading Llama2, Mistral, or paraphraser models:
 
 ```bash
-python llama2_KGW_inference_LFQA.py
+python -m catch22.pipeline \
+  --config configs/llama2_lfqa.yaml \
+  --reproduction-suite \
+  --num-samples 2 \
+  --local-backend \
+  --resume
 ```
 
-### Available Watermarking Schemes
-
-Generate text with different watermarking methods using:
+Repeat for Mistral:
 
 ```bash
-python llama2_XX_inference_LFQA.py
+python -m catch22.pipeline \
+  --config configs/mistral_lfqa.yaml \
+  --reproduction-suite \
+  --num-samples 2 \
+  --local-backend \
+  --resume
 ```
 
-where `XX` is the watermark type:
-- `KGW` - [Kirchenbauer et al.](https://arxiv.org/abs/2301.10226) (Biased sampling)
-- `Unigram` - [Zhao et al.](https://arxiv.org/abs/2306.17439) (Biased sampling)
-- `HCW` - [Hu et al.](https://arxiv.org/abs/2310.10669) (Bias-free sampling)
-- `DiPMark` - [Wu et al.](https://arxiv.org/abs/2310.07710) (Bias-free sampling)
-- `CGW` - [Christ et al.](https://proceedings.mlr.press/v247/christ24a/christ24a.pdf) (Distribution-preserving)
-- `Hybrid` - Our proposed adaptive hybrid scheme (Theorem 3 in the manuscript)
-- `vanilla` - Non-watermarked baseline
+## Full Reproduction
 
-## Visualization and Analysis
-
-### Generating Figures
-
-The `Analysis-Results/` directory contains plotting scripts and data for reproducing paper figures:
+Run the reproduction suite for Llama2:
 
 ```bash
-cd Analysis-Results/
-
-# Generate Figure A: Detectability scaling
-python Fig1Plot.py
-
-# Generate Figure B: Robustness degradation  
-python Fig2Plot.py
-
-# Generate Figure C: Pareto frontier
-python Fig3Plot.py
+python -m catch22.pipeline \
+  --config configs/llama2_lfqa.yaml \
+  --reproduction-suite \
+  --resume
 ```
 
-The directory also includes:
-- Pre-generated scatter plot data (`.npz` files)
-- Annotated figure PDFs explaining key results
-- Generated plots (`.png` files)
----
+Run the same pipeline for Mistral:
 
-*Note: This is work under submission. Citations and license information will be added upon acceptance.*
+```bash
+python -m catch22.pipeline \
+  --config configs/mistral_lfqa.yaml \
+  --reproduction-suite \
+  --resume
+```
 
+Use `--model-name-or-path /path/to/local/checkpoint` when you want to use a locally downloaded checkpoint instead of the model identifier in the config.
+
+## Individual Stages
+
+```bash
+python -m catch22.generate --config configs/llama2_lfqa.yaml --method hybrid --resume
+python -m catch22.attack --config configs/llama2_lfqa.yaml --method hybrid --attack dipper --paraphrase-strength moderate --resume
+python -m catch22.attack --config configs/llama2_lfqa.yaml --method hybrid --attack extreme-paraphrase --paraphrase-strength extreme --resume
+python -m catch22.score --config configs/llama2_lfqa.yaml --method hybrid --condition clean --resume
+python -m catch22.evaluate --config configs/llama2_lfqa.yaml --method hybrid
+python -m catch22.render --config configs/llama2_lfqa.yaml
+```
+
+Use `--dry-run` on any command to print resolved paths and planned work without running models.
+
+## Outputs
+
+Generated outputs are written under `outputs/` and are ignored by git:
+
+```text
+outputs/<track>/<method>/clean/generations.jsonl
+outputs/<track>/<method>/attacks/<condition>/attacked.jsonl
+outputs/<track>/<method>/scored/<condition>/scored.jsonl
+outputs/<track>/<method>/evaluations/<condition>.json
+outputs/<track>/tables/*.json
+outputs/<track>/tables/*.tex
+```

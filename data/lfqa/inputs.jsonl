@@ -1,0 +1,3 @@
+{"id": "sample-001", "prompt": "Q: Why do large language models need watermarking?\nA:", "reference": "Watermarking can help identify model-generated text while preserving useful generation quality."}
+{"id": "sample-002", "prompt": "Q: What makes paraphrasing attacks challenging for watermark detectors?\nA:", "reference": "Paraphrasing can change lexical and semantic structure, which may weaken watermark signals."}
+{"id": "sample-003", "prompt": "Q: Why compare Llama2 and Mistral in watermarking experiments?\nA:", "reference": "Comparing two model families tests whether watermark behavior is robust to model architecture and tokenizer differences."}

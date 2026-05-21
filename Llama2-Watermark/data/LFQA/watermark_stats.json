@@ -1,9 +1,0 @@
-{
-  "total_samples": 5,
-  "detection_rate": 1.0,
-  "mean_z_score": 10.64998059321126,
-  "std_z_score": 1.3568697083168368,
-  "median_z_score": 10.357239083544018,
-  "min_z_score": 8.944468054162293,
-  "max_z_score": 12.817175976009691
-}

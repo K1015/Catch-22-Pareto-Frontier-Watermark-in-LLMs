@@ -1,0 +1,39 @@
+track: mistral_lfqa
+dataset_path: data/lfqa/inputs.jsonl
+output_dir: outputs/mistral_lfqa
+model:
+  name: mistralai/Mistral-7B-v0.1
+  load_in_4bit: true
+methods:
+  - kgw
+  - unigram
+  - dipmark
+  - hcw
+  - heavywater
+  - simplexwater
+  - kuditipudi
+  - semstamp
+  - pmark
+  - simmark
+  - cgw
+  - gaussmark
+  - dawa
+  - hybrid
+attacks:
+  - name: dipper
+    strength: moderate
+    condition: dipper_moderate
+    model: kalpeshk2011/dipper-paraphraser-xxl
+  - name: extreme-paraphrase
+    strength: extreme
+    condition: extreme_paraphrase
+    model: facebook/bart-large-cnn
+num_samples: 500
+generation:
+  max_new_tokens: 300
+  temperature: 0.8
+  top_p: 0.95
+  top_k: 50
+table:
+  json: outputs/mistral_lfqa/tables/mistral_lfqa_table.json
+  tex: outputs/mistral_lfqa/tables/mistral_lfqa_table.tex
