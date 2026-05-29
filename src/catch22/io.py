@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median
 from typing import Iterable
 
 
@@ -92,11 +92,44 @@ def extract_text(row: dict) -> str:
 
 def summarize_scores(rows: list[dict]) -> dict:
     scores = [float(row.get("detection", {}).get("score", 0.0)) for row in rows]
+    z_scores = [float(row.get("detection", {}).get("z_score", 0.0)) for row in rows]
+    p_values = [float(row.get("detection", {}).get("p_value", 1.0)) for row in rows]
     detected = [1.0 if row.get("detection", {}).get("is_watermarked") else 0.0 for row in rows]
     token_counts = [int(row.get("detection", {}).get("num_tokens", 0)) for row in rows]
     return {
         "total_samples": len(rows),
         "mean_score": float(mean(scores)) if scores else 0.0,
+        "mean_z_score": float(mean(z_scores)) if z_scores else 0.0,
+        "median_z_score": float(median(z_scores)) if z_scores else 0.0,
+        "mean_p_value": float(mean(p_values)) if p_values else 1.0,
         "detection_rate": float(mean(detected)) if detected else 0.0,
         "mean_tokens": float(mean(token_counts)) if token_counts else 0.0,
     }
+
+
+def auroc_from_scores(positive_scores: list[float], negative_scores: list[float]) -> float | None:
+    """Compute AUROC from positive and negative detector scores.
+
+    The rank formulation handles ties by assigning tied observations their
+    average rank, matching the Mann-Whitney U interpretation of AUROC.
+    """
+    if not positive_scores or not negative_scores:
+        return None
+    labeled = [(float(score), 1) for score in positive_scores] + [(float(score), 0) for score in negative_scores]
+    labeled.sort(key=lambda item: item[0])
+    rank_sum_positive = 0.0
+    rank = 1
+    index = 0
+    while index < len(labeled):
+        next_index = index + 1
+        while next_index < len(labeled) and labeled[next_index][0] == labeled[index][0]:
+            next_index += 1
+        average_rank = (rank + rank + (next_index - index) - 1) / 2.0
+        positives_in_tie = sum(label for _, label in labeled[index:next_index])
+        rank_sum_positive += positives_in_tie * average_rank
+        rank += next_index - index
+        index = next_index
+    n_pos = len(positive_scores)
+    n_neg = len(negative_scores)
+    auc = (rank_sum_positive - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg)
+    return float(max(0.0, min(1.0, auc)))

@@ -23,12 +23,16 @@ def build_steps(config_path: str, output_dir: str | None, num_samples: int | Non
     config = load_config(config_path)
     conditions = PAPER_CONDITIONS
     steps = []
+    steps.append(("generate", "vanilla", "clean"))
+    for attack in config.attacks:
+        steps.append(("attack", "vanilla", attack["condition"]))
     for method in config.methods:
         steps.append(("generate", method, "clean"))
         for attack in config.attacks:
             steps.append(("attack", method, attack["condition"]))
         for condition in conditions:
             steps.append(("score", method, condition))
+            steps.append(("score_baseline", method, f"vanilla:{condition}"))
         for condition in conditions:
             steps.append(("evaluate", method, condition))
     steps.append(("render", "*", "*"))
@@ -49,6 +53,33 @@ def run_pipeline(args: argparse.Namespace) -> dict:
         print(json.dumps(plan, indent=2, sort_keys=True))
         return plan
     config = load_config(args.config)
+    run_generation(
+        _namespace(
+            config=args.config,
+            method="vanilla",
+            output_dir=args.output_dir,
+            model_name_or_path=args.model_name_or_path,
+            num_samples=args.num_samples,
+            max_new_tokens=args.max_new_tokens,
+            seed=args.seed,
+            resume=args.resume,
+            dry_run=False,
+            local_backend=args.local_backend,
+        )
+    )
+    for attack in config.attacks:
+        run_attack(
+            _namespace(
+                config=args.config,
+                method="vanilla",
+                attack=attack["name"],
+                paraphrase_strength=attack["strength"],
+                output_dir=args.output_dir,
+                resume=args.resume,
+                dry_run=False,
+                local_backend=args.local_backend,
+            )
+        )
     for method in config.methods:
         run_generation(
             _namespace(
@@ -82,6 +113,19 @@ def run_pipeline(args: argparse.Namespace) -> dict:
                 _namespace(
                     config=args.config,
                     method=method,
+                    source_method=None,
+                    condition=condition,
+                    output_dir=args.output_dir,
+                    seed=args.seed,
+                    resume=args.resume,
+                    dry_run=False,
+                )
+            )
+            run_score(
+                _namespace(
+                    config=args.config,
+                    method=method,
+                    source_method="vanilla",
                     condition=condition,
                     output_dir=args.output_dir,
                     seed=args.seed,

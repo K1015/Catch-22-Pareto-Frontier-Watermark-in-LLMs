@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .watermarks import HashWatermarkLogitsProcessor, apply_text_watermark, local_completion
+from .watermarks import HashWatermarkLogitsProcessor, apply_text_watermark, finalize_generated_text, local_completion
 
 
 @dataclass
@@ -57,7 +57,12 @@ class TextGenerator:
         top_k: int,
     ) -> GeneratedText:
         if self.local_backend:
-            text = apply_text_watermark(local_completion(prompt, method, sample_index), method, self.seed)
+            text = apply_text_watermark(
+                local_completion(prompt, method, sample_index),
+                method,
+                self.seed,
+                local_backend=True,
+            )
             return GeneratedText(text=text, backend="local")
 
         import torch
@@ -79,5 +84,5 @@ class TextGenerator:
             )
         prompt_len = encoded["input_ids"].shape[-1]
         text = self.tokenizer.decode(output[0][prompt_len:], skip_special_tokens=True)
-        text = apply_text_watermark(text, method, self.seed)
+        text = finalize_generated_text(text, method, self.seed)
         return GeneratedText(text=text, backend="hf")
