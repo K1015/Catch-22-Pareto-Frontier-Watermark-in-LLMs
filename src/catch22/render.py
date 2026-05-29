@@ -29,9 +29,13 @@ def run_render(args: argparse.Namespace) -> dict:
                 payload = json.loads(path.read_text(encoding="utf-8"))
                 row[f"{condition}_detection_rate"] = payload.get("detection_rate")
                 row[f"{condition}_retention"] = payload.get("robustness_retention")
+                row[f"{condition}_auroc"] = payload.get("detectability_auroc")
+                row[f"{condition}_mean_z_score"] = payload.get("mean_z_score")
             else:
                 row[f"{condition}_detection_rate"] = None
                 row[f"{condition}_retention"] = None
+                row[f"{condition}_auroc"] = None
+                row[f"{condition}_mean_z_score"] = None
         rows.append(row)
     payload = {
         "track": config.track,
@@ -54,14 +58,19 @@ def run_render(args: argparse.Namespace) -> dict:
         return payload
     write_json(table_json, payload)
     table_tex.parent.mkdir(parents=True, exist_ok=True)
-    header = "Method & Clean detect. & Moderate retain. & Extreme retain. \\\\\n"
-    rendered = ["\\begin{tabular}{lrrr}\n", header, "\\hline\n"]
+    header = (
+        "Method & Clean AUROC & Clean z & Clean detect. & "
+        "Moderate AUROC & Moderate retain. & Extreme AUROC & Extreme retain. \\\\\n"
+    )
+    rendered = ["\\begin{tabular}{lrrrrrrr}\n", header, "\\hline\n"]
     for row in rows:
         def fmt(value):
             return "NA" if value is None else f"{value:.3f}"
         rendered.append(
-            f"{_latex_escape(row['display_name'])} & {fmt(row['clean_detection_rate'])} & "
-            f"{fmt(row['dipper_moderate_retention'])} & {fmt(row['extreme_paraphrase_retention'])} \\\\\n"
+            f"{_latex_escape(row['display_name'])} & {fmt(row['clean_auroc'])} & "
+            f"{fmt(row['clean_mean_z_score'])} & {fmt(row['clean_detection_rate'])} & "
+            f"{fmt(row['dipper_moderate_auroc'])} & {fmt(row['dipper_moderate_retention'])} & "
+            f"{fmt(row['extreme_paraphrase_auroc'])} & {fmt(row['extreme_paraphrase_retention'])} \\\\\n"
         )
     rendered.append("\\end{tabular}\n")
     table_tex.write_text("".join(rendered), encoding="utf-8")

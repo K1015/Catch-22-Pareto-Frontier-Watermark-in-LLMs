@@ -11,7 +11,7 @@ The experiments focus on Long-Form Question Answering (LFQA), where a model writ
 - `meta-llama/Llama-2-7b-hf`
 - `mistralai/Mistral-7B-v0.1`
 
-The included runs evaluate every implemented watermark method, including the `hybrid` method. They measure detection on clean outputs and robustness after two edit attacks: a moderate Dipper rewrite and a stronger summary-style paraphrase.
+The included runs evaluate every implemented watermark method, including the `hybrid` method. They measure detection on clean outputs and robustness after two edit attacks: a moderate Dipper rewrite and a stronger summary-style paraphrase. Detectability summaries include detector score, z-score, detection rate, and AUROC against unwatermarked `vanilla` outputs.
 
 ## Overview
 
@@ -32,7 +32,7 @@ Figure: Watermarking schemes in modern LLMs exhibit a trade-off between detectab
 If you use this repository, please cite the paper:
 
 ```bibtex
-@inproceedings{pratihar2026catch22,
+@inproceedings{catch22watermarking2026,
   title = {Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking},
   author = {Pratihar, Kuheli and Mukhopadhyay, Debdeep},
   booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
@@ -48,6 +48,23 @@ Paper page: https://icml.cc/virtual/2026/poster/66807
 Watermark methods:
 
 `kgw`, `unigram`, `dipmark`, `hcw`, `heavywater`, `simplexwater`, `kuditipudi`, `semstamp`, `pmark`, `simmark`, `cgw`, `gaussmark`, `dawa`, `hybrid`.
+
+Watermark references:
+
+- `kgw`: Kirchenbauer et al., ["A Watermark for Large Language Models"](https://openreview.net/pdf?id=aX8ig9X2a7), ICML 2023.
+- `unigram`: Zhao et al., ["Provable Robust Watermarking for AI-Generated Text"](https://openreview.net/pdf?id=SsmT8aO45L), ICLR 2024.
+- `dipmark`: Wu et al., ["A Resilient and Accessible Distribution-Preserving Watermark for Large Language Models"](https://openreview.net/pdf?id=c8qWiNiqRY), ICML 2024.
+- `hcw`: Hu et al., ["Unbiased Watermark for Large Language Models"](https://openreview.net/forum?id=uWVC5FVidc), ICLR 2024.
+- `heavywater`: Tsur et al., ["HeavyWater and SimplexWater: Distortion-free LLM Watermarks for Low-Entropy Distributions"](https://openreview.net/forum?id=R5EBtNE2Y9), NeurIPS 2025.
+- `simplexwater`: Tsur et al., ["HeavyWater and SimplexWater: Distortion-free LLM Watermarks for Low-Entropy Distributions"](https://openreview.net/forum?id=R5EBtNE2Y9), NeurIPS 2025.
+- `kuditipudi`: Kuditipudi et al., ["Robust Distortion-free Watermarks for Language Models"](https://openreview.net/forum?id=FpaCL1MO2C), TMLR 2024.
+- `semstamp`: Hou et al., ["SemStamp: A Semantic Watermark with Paraphrastic Robustness for Text Generation"](https://aclanthology.org/2024.naacl-long.226/), NAACL 2024.
+- `pmark`: Huo et al., ["PMark: Towards Robust and Distortion-free Semantic-level Watermarking with Channel Constraints"](https://arxiv.org/abs/2509.21057), 2025.
+- `simmark`: Dabiriaghdam and Wang, ["SimMark: A Robust Sentence-Level Similarity-Based Watermarking Algorithm for Large Language Models"](https://arxiv.org/pdf/2502.02787), 2025.
+- `cgw`: Christ, Gunn, and Zamir, ["Undetectable Watermarks for Language Models"](https://proceedings.mlr.press/v247/christ24a.html), COLT 2024.
+- `gaussmark`: Block, Rakhlin, and Sekhari, ["GaussMark: A Practical Approach for Structural Watermarking of Language Models"](https://openreview.net/pdf?id=YG3DbpAQBf), ICML 2025.
+- `dawa`: He et al., ["Theoretically Grounded Framework for LLM Watermarking: A Distribution-Adaptive Approach"](https://openreview.net/forum?id=Lzi8raVEQu), 2025.
+- `hybrid`: ["Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking"](https://icml.cc/virtual/2026/poster/66807), ICML 2026.
 
 Default conditions:
 
@@ -137,6 +154,18 @@ python -m catch22.evaluate --config configs/llama2_lfqa.yaml --method hybrid
 python -m catch22.render --config configs/llama2_lfqa.yaml
 ```
 
+The full pipeline handles the `vanilla` baseline automatically. For AUROC in individual-stage runs, generate and attack the `vanilla` baseline before evaluation, then score it with the selected detector:
+
+```bash
+python -m catch22.generate --config configs/llama2_lfqa.yaml --method vanilla --resume
+python -m catch22.attack --config configs/llama2_lfqa.yaml --method vanilla --attack dipper --paraphrase-strength moderate --resume
+python -m catch22.attack --config configs/llama2_lfqa.yaml --method vanilla --attack extreme-paraphrase --paraphrase-strength extreme --resume
+python -m catch22.score --config configs/llama2_lfqa.yaml --method hybrid --source-method vanilla --condition clean --resume
+python -m catch22.score --config configs/llama2_lfqa.yaml --method hybrid --source-method vanilla --condition dipper_moderate --resume
+python -m catch22.score --config configs/llama2_lfqa.yaml --method hybrid --source-method vanilla --condition extreme_paraphrase --resume
+python -m catch22.evaluate --config configs/llama2_lfqa.yaml --method hybrid
+```
+
 Use `--dry-run` on any command to print resolved paths and planned work without running models.
 
 ## Outputs
@@ -147,6 +176,7 @@ Generated outputs are written under `outputs/` and are ignored by git:
 outputs/<track>/<method>/clean/generations.jsonl
 outputs/<track>/<method>/attacks/<condition>/attacked.jsonl
 outputs/<track>/<method>/scored/<condition>/scored.jsonl
+outputs/<track>/<method>/scored_baseline/vanilla/<condition>/scored.jsonl
 outputs/<track>/<method>/evaluations/<condition>.json
 outputs/<track>/tables/*.json
 outputs/<track>/tables/*.tex
