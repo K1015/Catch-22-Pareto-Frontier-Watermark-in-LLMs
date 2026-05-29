@@ -45,26 +45,22 @@ Paper page: https://icml.cc/virtual/2026/poster/66807
 
 ## Methods and Conditions
 
-Watermark methods:
-
-`kgw`, `unigram`, `dipmark`, `hcw`, `heavywater`, `simplexwater`, `kuditipudi`, `semstamp`, `pmark`, `simmark`, `cgw`, `gaussmark`, `dawa`, `hybrid`.
-
-Watermark references:
-
-- `kgw`: Kirchenbauer et al., ["A Watermark for Large Language Models"](https://openreview.net/pdf?id=aX8ig9X2a7), ICML 2023.
-- `unigram`: Zhao et al., ["Provable Robust Watermarking for AI-Generated Text"](https://openreview.net/pdf?id=SsmT8aO45L), ICLR 2024.
-- `dipmark`: Wu et al., ["A Resilient and Accessible Distribution-Preserving Watermark for Large Language Models"](https://openreview.net/pdf?id=c8qWiNiqRY), ICML 2024.
-- `hcw`: Hu et al., ["Unbiased Watermark for Large Language Models"](https://openreview.net/forum?id=uWVC5FVidc), ICLR 2024.
-- `heavywater`: Tsur et al., ["HeavyWater and SimplexWater: Distortion-free LLM Watermarks for Low-Entropy Distributions"](https://openreview.net/forum?id=R5EBtNE2Y9), NeurIPS 2025.
-- `simplexwater`: Tsur et al., ["HeavyWater and SimplexWater: Distortion-free LLM Watermarks for Low-Entropy Distributions"](https://openreview.net/forum?id=R5EBtNE2Y9), NeurIPS 2025.
-- `kuditipudi`: Kuditipudi et al., ["Robust Distortion-free Watermarks for Language Models"](https://openreview.net/forum?id=FpaCL1MO2C), TMLR 2024.
-- `semstamp`: Hou et al., ["SemStamp: A Semantic Watermark with Paraphrastic Robustness for Text Generation"](https://aclanthology.org/2024.naacl-long.226/), NAACL 2024.
-- `pmark`: Huo et al., ["PMark: Towards Robust and Distortion-free Semantic-level Watermarking with Channel Constraints"](https://arxiv.org/abs/2509.21057), 2025.
-- `simmark`: Dabiriaghdam and Wang, ["SimMark: A Robust Sentence-Level Similarity-Based Watermarking Algorithm for Large Language Models"](https://arxiv.org/pdf/2502.02787), 2025.
-- `cgw`: Christ, Gunn, and Zamir, ["Undetectable Watermarks for Language Models"](https://proceedings.mlr.press/v247/christ24a.html), COLT 2024.
-- `gaussmark`: Block, Rakhlin, and Sekhari, ["GaussMark: A Practical Approach for Structural Watermarking of Language Models"](https://openreview.net/pdf?id=YG3DbpAQBf), ICML 2025.
-- `dawa`: He et al., ["Theoretically Grounded Framework for LLM Watermarking: A Distribution-Adaptive Approach"](https://openreview.net/forum?id=Lzi8raVEQu), 2025.
-- `hybrid`: ["Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking"](https://icml.cc/virtual/2026/poster/66807), ICML 2026.
+| Method | Code | Reference |
+| --- | --- | --- |
+| `kgw` | `src/catch22/methods/kgw.py` | Kirchenbauer et al., ["A Watermark for Large Language Models"](https://openreview.net/pdf?id=aX8ig9X2a7), ICML 2023 |
+| `unigram` | `src/catch22/methods/unigram.py` | Zhao et al., ["Provable Robust Watermarking for AI-Generated Text"](https://openreview.net/pdf?id=SsmT8aO45L), ICLR 2024 |
+| `dipmark` | `src/catch22/methods/dipmark.py` | Wu et al., ["A Resilient and Accessible Distribution-Preserving Watermark for Large Language Models"](https://openreview.net/pdf?id=c8qWiNiqRY), ICML 2024 |
+| `hcw` | `src/catch22/methods/hcw.py` | Hu et al., ["Unbiased Watermark for Large Language Models"](https://openreview.net/forum?id=uWVC5FVidc), ICLR 2024 |
+| `heavywater` | `src/catch22/methods/heavywater.py` | Tsur et al., ["HeavyWater and SimplexWater: Distortion-free LLM Watermarks for Low-Entropy Distributions"](https://openreview.net/forum?id=R5EBtNE2Y9), NeurIPS 2025 |
+| `simplexwater` | `src/catch22/methods/simplexwater.py` | Tsur et al., ["HeavyWater and SimplexWater: Distortion-free LLM Watermarks for Low-Entropy Distributions"](https://openreview.net/forum?id=R5EBtNE2Y9), NeurIPS 2025 |
+| `kuditipudi` | `src/catch22/methods/kuditipudi.py` | Kuditipudi et al., ["Robust Distortion-free Watermarks for Language Models"](https://openreview.net/forum?id=FpaCL1MO2C), TMLR 2024 |
+| `semstamp` | `src/catch22/methods/semantic.py` | Hou et al., ["SemStamp: A Semantic Watermark with Paraphrastic Robustness for Text Generation"](https://aclanthology.org/2024.naacl-long.226/), NAACL 2024 |
+| `pmark` | `src/catch22/methods/semantic.py` | Huo et al., ["PMark: Towards Robust and Distortion-free Semantic-level Watermarking with Channel Constraints"](https://arxiv.org/abs/2509.21057), 2025 |
+| `simmark` | `src/catch22/methods/semantic.py` | Dabiriaghdam and Wang, ["SimMark: A Robust Sentence-Level Similarity-Based Watermarking Algorithm for Large Language Models"](https://arxiv.org/pdf/2502.02787), 2025 |
+| `cgw` | `src/catch22/methods/cgw.py` | Christ, Gunn, and Zamir, ["Undetectable Watermarks for Language Models"](https://proceedings.mlr.press/v247/christ24a.html), COLT 2024 |
+| `gaussmark` | `src/catch22/methods/gaussmark.py` | Block, Rakhlin, and Sekhari, ["GaussMark: A Practical Approach for Structural Watermarking of Language Models"](https://openreview.net/pdf?id=YG3DbpAQBf), ICML 2025 |
+| `dawa` | `src/catch22/methods/dawa.py` | He et al., ["Theoretically Grounded Framework for LLM Watermarking: A Distribution-Adaptive Approach"](https://openreview.net/forum?id=Lzi8raVEQu), 2025 |
+| `hybrid` | `src/catch22/methods/hybrid.py` | ["Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking"](https://icml.cc/virtual/2026/poster/66807), ICML 2026 |
 
 Default conditions:
 
