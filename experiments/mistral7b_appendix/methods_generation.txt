@@ -1,0 +1,13 @@
+vanilla
+kgw
+unigram
+dipmark
+hcw
+heavywater
+simplexwater
+semstamp
+pmark
+simmark
+cgw
+gaussmark
+hybrid

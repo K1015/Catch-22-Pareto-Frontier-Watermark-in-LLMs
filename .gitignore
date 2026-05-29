@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.venv/
+
+# Local environment configuration (never commit your paths)
+env.sh
+.env
+
+# Upstream method repos are fetched by scripts/fetch_external.sh
+external/
+
+# Model / dataset caches and run artifacts (driven by CATCH22_* macros)
+hf_cache/
+outputs/
+results/
+logs/
+*.log
+
+# OS
+.DS_Store

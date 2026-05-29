@@ -1,0 +1,51 @@
+{
+  "track_name": "llama2_lfqa_main",
+  "description": "Main Llama-2-7B LFQA experiment backing the paper table.",
+  "dataset_path": "../../data/lfqa/inputs.jsonl",
+  "model_name": "meta-llama/Llama-2-7b-hf",
+  "results_subdir": "llama2_lfqa_main",
+  "methods": [
+    "kgw",
+    "unigram",
+    "dipmark",
+    "hcw",
+    "heavywater",
+    "simplexwater",
+    "kuditipudi",
+    "semstamp",
+    "pmark",
+    "simmark",
+    "cgw",
+    "gaussmark",
+    "dawa",
+    "hybrid"
+  ],
+  "attacks": [
+    "none",
+    "dipper",
+    "opt",
+    "wm-removal",
+    "synonym",
+    "backtranslation",
+    "summarization"
+  ],
+  "num_samples": 500,
+  "max_new_tokens": 300,
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "top_k": 50,
+  "load_in_4bit": true,
+  "preflight_num_samples": 5,
+  "table": {
+    "label": "tab:llama-main",
+    "caption": "Robustness and detectability on Llama-2-7B across attack conditions.",
+    "output_tex": "rendered/llama2_main_table.tex",
+    "output_json": "rendered/llama2_main_table.json"
+  },
+  "extras": {
+    "calibration_method": "vanilla",
+    "target_fpr": 0.01,
+    "summarization_model": "facebook/bart-large-cnn"
+  }
+}
+

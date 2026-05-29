@@ -1,0 +1,49 @@
+{
+  "track_name": "mistral7b_appendix",
+  "description": "Mistral-7B appendix experiment backing the paper appendix table.",
+  "dataset_path": "../../data/lfqa/inputs.jsonl",
+  "model_name": "mistralai/Mistral-7B-v0.1",
+  "results_subdir": "mistral7b_appendix",
+  "methods": [
+    "kgw",
+    "unigram",
+    "dipmark",
+    "hcw",
+    "heavywater",
+    "simplexwater",
+    "semstamp",
+    "pmark",
+    "simmark",
+    "cgw",
+    "gaussmark",
+    "hybrid"
+  ],
+  "attacks": [
+    "none",
+    "dipper",
+    "opt",
+    "wm-removal",
+    "synonym",
+    "backtranslation",
+    "summarization"
+  ],
+  "num_samples": 500,
+  "max_new_tokens": 300,
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "top_k": 50,
+  "load_in_4bit": true,
+  "preflight_num_samples": 5,
+  "table": {
+    "label": "tab:mistral-eval",
+    "caption": "Robustness and detectability on Mistral-7B across attack conditions.",
+    "output_tex": "rendered/mistral_appendix_table.tex",
+    "output_json": "rendered/mistral_appendix_table.json"
+  },
+  "extras": {
+    "calibration_method": "vanilla",
+    "target_fpr": 0.01,
+    "summarization_model": "facebook/bart-large-cnn"
+  }
+}
+

@@ -1,0 +1,14 @@
+kgw
+unigram
+dipmark
+hcw
+heavywater
+simplexwater
+kuditipudi
+semstamp
+pmark
+simmark
+cgw
+gaussmark
+dawa
+hybrid
