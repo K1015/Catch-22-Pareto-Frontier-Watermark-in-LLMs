@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="title" content="Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking">
+  <meta name="description" content="ICML 2026 project page for Catch-22, an information-theoretic study of the tradeoff between LLM watermark robustness and keyless detectability.">
+  <meta name="keywords" content="LLM watermarking, AI-generated text detection, robustness, detectability, information theory, ICML 2026, language models">
+  <meta name="author" content="Kuheli Pratihar, Debdeep Mukhopadhyay">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Catch-22 ICML 2026">
+  <meta property="og:title" content="Catch-22: Detectability and Robustness in LLM Watermarking">
+  <meta property="og:description" content="A project page for an ICML 2026 paper characterizing a fundamental tradeoff in LLM watermarking and proposing a hybrid selector across edit regimes.">
+  <meta property="og:url" content="https://k1015.github.io/Catch-22-Pareto-Frontier-Watermark-in-LLMs/">
+  <meta property="og:image" content="https://k1015.github.io/Catch-22-Pareto-Frontier-Watermark-in-LLMs/static/images/hlv.png">
+  <meta property="og:image:alt" content="Detectability and robustness tradeoff for LLM watermarking">
+  <meta property="article:published_time" content="2026-06-09T00:00:00.000Z">
+  <meta property="article:author" content="Kuheli Pratihar">
+  <meta property="article:author" content="Debdeep Mukhopadhyay">
+  <meta property="article:section" content="Machine Learning">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Catch-22: Detectability and Robustness in LLM Watermarking">
+  <meta name="twitter:description" content="ICML 2026 project page for an information-theoretic framework and hybrid selector for LLM watermarking.">
+  <meta name="twitter:image" content="https://k1015.github.io/Catch-22-Pareto-Frontier-Watermark-in-LLMs/static/images/hlv.png">
+  <meta name="twitter:image:alt" content="Detectability and robustness tradeoff for LLM watermarking">
+
+  <meta name="citation_title" content="Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking">
+  <meta name="citation_author" content="Pratihar, Kuheli">
+  <meta name="citation_author" content="Mukhopadhyay, Debdeep">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="Proceedings of the 43rd International Conference on Machine Learning">
+  <meta name="citation_pdf_url" content="https://k1015.github.io/Catch-22-Pareto-Frontier-Watermark-in-LLMs/static/pdfs/catch22-paper.pdf">
+
+  <meta name="theme-color" content="#1f6f68">
+  <meta name="msapplication-TileColor" content="#1f6f68">
+  <title>Catch-22: Detectability-Robustness Trade-offs in LLM Watermarking</title>
+
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/catch22.css?v=20260628-animation-steps">
+
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/catch22.js?v=20260628-home-tabs"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+        inlineMath: [["\\(", "\\)"]]
+      },
+      svg: {
+        fontCache: "global"
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking",
+    "description": "An information-theoretic framework characterizing the tradeoff between robustness to text editing and detectability by keyless observers in LLM watermarking.",
+    "author": [
+      {"@type": "Person", "name": "Kuheli Pratihar"},
+      {"@type": "Person", "name": "Debdeep Mukhopadhyay"}
+    ],
+    "datePublished": "2026-06-09",
+    "publisher": {"@type": "Organization", "name": "International Conference on Machine Learning"},
+    "url": "https://k1015.github.io/Catch-22-Pareto-Frontier-Watermark-in-LLMs/",
+    "image": "https://k1015.github.io/Catch-22-Pareto-Frontier-Watermark-in-LLMs/static/images/hlv.png",
+    "keywords": ["LLM watermarking", "AI-generated text detection", "robustness", "detectability", "information theory"],
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+    <section class="hero publication-hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop has-text-centered">
+          <p class="venue-label">ICML 2026</p>
+          <h1 class="title publication-title">Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking</h1>
+          <div class="publication-authors">
+            <span class="author-block">Kuheli Pratihar</span>
+            <span class="author-separator">and</span>
+            <span class="author-block">Debdeep Mukhopadhyay</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="site-layout">
+      <div class="site-tabs-shell">
+        <nav class="site-tabs" aria-label="Project sections" role="tablist">
+          <button id="tab-home" class="site-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-home" data-site-tab="home" data-scroll-target="home">
+            Home
+          </button>
+          <button id="tab-watermarks" class="site-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-watermarks" data-site-tab="watermarks" data-scroll-target="watermark-types">
+            Watermarking Types
+          </button>
+          <button id="tab-catch22" class="site-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-catch22" data-site-tab="catch22" data-scroll-target="catch22-overview">
+            Catch-22
+          </button>
+          <button id="tab-hybrid" class="site-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-hybrid" data-site-tab="hybrid" data-scroll-target="selector-walkthrough">
+            Hybrid Selector
+          </button>
+          <button id="tab-citation" class="site-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-citation" data-site-tab="citation" data-scroll-target="reproducibility">
+            Citation
+          </button>
+        </nav>
+      </div>
+
+      <div class="site-main">
+        <div id="panel-home" class="site-tab-panel is-active" role="tabpanel" aria-labelledby="tab-home" data-site-tab-panel="home">
+    <section class="section home-section" id="home">
+      <div class="container is-max-widescreen has-text-centered">
+        <p class="home-summary">
+          LLM watermarks face a Catch-22: signals that survive editing tend to become easier for keyless observers to detect, while signals that remain stealthy are often easier to erase.
+        </p>
+        <div class="publication-links home-links">
+          <a href="static/pdfs/catch22-paper.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span>
+            <span>Paper</span>
+          </a>
+          <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs" target="_blank" class="external-link button is-normal is-rounded is-dark">
+            <span class="icon"><i class="fab fa-github"></i></span>
+            <span>Code</span>
+          </a>
+          <a href="https://icml.cc/virtual/2026/poster/66807" target="_blank" class="external-link button is-normal is-rounded is-dark">
+            <span class="icon"><i class="fas fa-chalkboard"></i></span>
+            <span>ICML Page</span>
+          </a>
+          <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark js-site-tab-link" data-site-tab="citation" data-scroll-target="BibTeX">
+            <span class="icon"><i class="fas fa-quote-right"></i></span>
+            <span>BibTeX</span>
+          </a>
+        </div>
+        <div class="home-animation" aria-label="Animated explanation of LLM watermarking, detectability, robustness, and stealth">
+          <div class="animation-stage">
+            <div class="signal-path" aria-hidden="true">
+              <span class="signal-node">Prompt</span>
+              <span class="signal-node">Keyed sampling</span>
+              <span class="signal-node">Watermarked output</span>
+              <span class="signal-node">Verifier</span>
+              <span class="signal-pulse"></span>
+            </div>
+            <figure class="animation-figure prompt-frame">
+              <img src="static/images/animation-prompt.png?v=20260628-animation-steps" alt="Prompt figure showing token symbols and the input prompt" loading="eager">
+            </figure>
+            <figure class="animation-figure keyed-frame">
+              <img src="static/images/animation-keyed-sampling.png?v=20260628-animation-steps" alt="Keyed sampling figure showing prompt tokens passing through the model and keyed probabilistic sampling" loading="eager">
+            </figure>
+            <figure class="animation-figure output-frame">
+              <img src="static/images/animation-watermarked-output.png?v=20260628-animation-steps" alt="Watermarked output figure showing the generated sentence and selected token" loading="eager">
+            </figure>
+            <figure class="animation-figure verifier-frame">
+              <img src="static/images/animation-verifier.png?v=20260628-animation-steps" alt="Verifier figure showing keyed verification of the watermarked output" loading="eager">
+            </figure>
+            <figure class="animation-figure catch22-frame">
+              <img src="static/images/watermark-catch22-full.png?v=20260628-animation-steps" alt="Updated Catch-22 diagram showing the watermark signal tradeoff flow" loading="eager">
+            </figure>
+          </div>
+          <div class="animation-copy">
+            <p class="card-kicker">Watermarking tradeoff</p>
+            <h2>A watermark hides a keyed signal in model output.</h2>
+            <p>
+              The verifier should still recover it after edits, while a keyless observer should not be able to see the shift.
+            </p>
+            <div class="tradeoff-meter" aria-hidden="true">
+              <div class="tradeoff-row">
+                <span>Robustness</span>
+                <strong>survives edits</strong>
+                <i class="tradeoff-track"><span class="tradeoff-fill robustness-fill"></span></i>
+              </div>
+              <div class="tradeoff-row">
+                <span>Detectability</span>
+                <strong>keyless visibility</strong>
+                <i class="tradeoff-track"><span class="tradeoff-fill detectability-fill"></span></i>
+              </div>
+              <div class="tradeoff-row">
+                <span>Stealth</span>
+                <strong>hidden signal</strong>
+                <i class="tradeoff-track"><span class="tradeoff-fill stealth-fill"></span></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-concepts" aria-label="Diagram explanations for stealth, robustness, and Catch-22">
+          <article class="diagram-concept">
+            <figure>
+              <img src="static/images/watermark-stealth.png?v=20260628-bottom-three" alt="Watermarked text compared with unwatermarked text to show stealth under normal reading" loading="eager">
+            </figure>
+            <div>
+              <strong>Stealth</strong>
+              <p>The surface text should look ordinary to a keyless observer; the signal is meant to stay hidden unless the verifier has the key.</p>
+            </div>
+          </article>
+          <article class="diagram-concept">
+            <figure>
+              <img src="static/images/watermark-robustness.png?v=20260628-bottom-three" alt="Edited watermarked output still preserving an extractable watermark signal" loading="eager">
+            </figure>
+            <div>
+              <strong>Robustness</strong>
+              <p>After edits, the verifier should still recover enough of the watermark to identify the generated text as watermarked.</p>
+            </div>
+          </article>
+          <article class="diagram-concept">
+            <figure>
+              <img src="static/images/watermark-catch22-full.png?v=20260628-animation-steps" alt="Catch-22 flow showing stronger watermark layers and their tradeoff with observability" loading="eager">
+            </figure>
+            <div>
+              <strong>Catch-22</strong>
+              <p>Making the signal stronger improves robustness, but it often increases detectability; making it stealthier can make it easier to erase.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+        </div>
+
+        <div id="panel-watermarks" class="site-tab-panel" role="tabpanel" aria-labelledby="tab-watermarks" data-site-tab-panel="watermarks" hidden>
+    <section class="section watermark-types-section" id="watermark-types">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered">Different Types of Watermarking</h2>
+
+        <div class="watermark-family-grid" aria-label="Watermark type taxonomy">
+          <article class="watermark-family-card" data-family-guide="biased-token">
+            <figure>
+              <img src="figures/Biased.png" alt="Biased watermarking example with green-token probability increase" loading="eager">
+            </figure>
+            <div>
+              <p class="card-kicker">I. Biased watermarking</p>
+              <h3>Probability-modifying token watermarking</h3>
+              <p>Raises the probability of keyed token sets, producing strong verifier evidence and higher keyless visibility.</p>
+              <div class="scheme-list">
+                <div class="scheme-item">
+                  <strong>KGW</strong>
+                  <span>Context-dependent green-list watermark that biases logits toward keyed token subsets.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/pdf?id=aX8ig9X2a7" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_KGW_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>Unigram</strong>
+                  <span>Fixed-green-list watermark with a simple count-based detector over a keyed token partition.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/pdf?id=SsmT8aO45L" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_Unigram_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="watermark-family-card" data-family-guide="bias-free-token">
+            <figure>
+              <img src="figures/Bias-Free.png" alt="Bias-free token watermarking example with keyed sampling and unchanged marginal distribution" loading="eager">
+            </figure>
+            <div>
+              <p class="card-kicker">II. Bias-free token watermarking</p>
+              <h3>Keyed sampling with lower marginal drift</h3>
+              <p>Preserves token marginals more carefully. Robustness depends on token alignment surviving edits.</p>
+              <div class="scheme-list">
+                <div class="scheme-item">
+                  <strong>DiPMark</strong>
+                  <span>Distribution-preserving p-alpha reweighting with retained keyed detector signal.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/pdf?id=c8qWiNiqRY" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_DiPMark_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>HCW</strong>
+                  <span>Unbiased inverse-CDF style sampling that preserves marginal probabilities.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/forum?id=uWVC5FVidc" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_HCW_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>HeavyWater</strong>
+                  <span>Heavy-tailed PRF token preference watermark for low-entropy decoding regimes.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/forum?id=R5EBtNE2Y9" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_HeavyWater_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>SimplexWater</strong>
+                  <span>Simplex-direction PRF watermark evaluated through the token-level adapter.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/forum?id=R5EBtNE2Y9" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_SimplexWater_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>Kuditipudi</strong>
+                  <span>Gumbel-key randomized sampling aligned against a keyed random sequence.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/forum?id=FpaCL1MO2C" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_Kuditipudi_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="watermark-family-card" data-family-guide="semantic">
+            <figure>
+              <img src="figures/Semnatic.png" alt="Semantic watermarking example with sentence-level encoding" loading="eager">
+            </figure>
+            <div>
+              <p class="card-kicker">II*. Semantic watermarking</p>
+              <h3>Sentence- or meaning-level evidence</h3>
+              <p>Uses sentence or semantic features, so paraphrases hurt less than exact token substitutions.</p>
+              <div class="scheme-list">
+                <div class="scheme-item">
+                  <strong>SemStamp</strong>
+                  <span>Embedding-space LSH and rejection sampling for sentence-level signals.</span>
+                  <div class="scheme-links">
+                    <a href="https://aclanthology.org/2024.naacl-long.226/" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_SemStamp_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>PMark</strong>
+                  <span>Channel-constrained semantic watermark with limited distortion.</span>
+                  <div class="scheme-links">
+                    <a href="https://arxiv.org/abs/2509.21057" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_PMark_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>SimMark</strong>
+                  <span>Sentence-similarity watermark over keyed embedding-space intervals.</span>
+                  <div class="scheme-links">
+                    <a href="https://arxiv.org/abs/2502.02787" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_SimMark_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="watermark-family-card" data-family-guide="distribution">
+            <figure>
+              <img src="figures/Undetectable.png" alt="Undetectable watermarking example with distribution-preserving sampling" loading="eager">
+            </figure>
+            <div>
+              <p class="card-kicker">III. Undetectable watermarking</p>
+              <h3>Distribution-preserving schemes</h3>
+              <p>Preserves the output distribution for keyless observers, but edit robustness is fragile.</p>
+              <div class="scheme-list">
+                <div class="scheme-item">
+                  <strong>CGW</strong>
+                  <span>Cryptographic inverse-CDF sampling designed to stay invisible to keyless tests.</span>
+                  <div class="scheme-links">
+                    <a href="https://proceedings.mlr.press/v247/christ24a.html" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_CGW_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="watermark-family-card other-family-card" data-family-guide="other">
+            <div>
+              <p class="card-kicker">IV. Others</p>
+              <h3>Adaptive, structural, and selector-style schemes</h3>
+              <p>These methods are evaluated in the same pipeline, but they do not correspond to one of the four schematic panels above.</p>
+              <div class="scheme-list other-scheme-list">
+                <div class="scheme-item">
+                  <strong>GaussMark</strong>
+                  <span>Structural/training-time watermark evaluated through checkpoint hooks.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/pdf?id=YG3DbpAQBf" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_GaussMark_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>DAWA</strong>
+                  <span>Distribution-adaptive watermark that changes strength with the next-token distribution.</span>
+                  <div class="scheme-links">
+                    <a href="https://openreview.net/forum?id=Lzi8raVEQu" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/common/dawa_watermark.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+                <div class="scheme-item">
+                  <strong>Hybrid</strong>
+                  <span>Catch-22 selector wrapper that routes across families by expected edit regime.</span>
+                  <div class="scheme-links">
+                    <a href="static/pdfs/catch22-paper.pdf" target="_blank" rel="noopener noreferrer">Paper</a>
+                    <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs/blob/main/Llama2-Watermark/llama2_Hybrid_inference_LFQA.py" target="_blank" rel="noopener noreferrer">Code</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+        </div>
+
+        <div id="panel-catch22" class="site-tab-panel" role="tabpanel" aria-labelledby="tab-catch22" data-site-tab-panel="catch22" hidden>
+    <section class="section catch22-section" id="catch22-overview">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered">The Watermarking Catch-22</h2>
+
+        <div class="catch22-lab catch22-lab-wide" aria-live="polite">
+          <div class="catch22-tabs" role="tablist" aria-label="Watermark family tradeoff">
+            <button class="catch22-tab is-active" type="button" data-catch-mode="biased" role="tab" aria-selected="true">
+              <span>I</span>
+              Biased token
+            </button>
+            <button class="catch22-tab" type="button" data-catch-mode="biasfree" role="tab" aria-selected="false">
+              <span>II</span>
+              Bias-free token
+            </button>
+            <button class="catch22-tab" type="button" data-catch-mode="semantic" role="tab" aria-selected="false">
+              <span>II'</span>
+              Semantic
+            </button>
+            <button class="catch22-tab" type="button" data-catch-mode="undetectable" role="tab" aria-selected="false">
+              <span>III</span>
+              Undetectable
+            </button>
+          </div>
+
+          <div class="catch22-edit-control">
+            <label for="catch22-edit-slider">
+              <span>Downstream edit pressure</span>
+              <strong id="catch22-edit-label">25%</strong>
+            </label>
+            <input id="catch22-edit-slider" class="catch22-slider" type="range" min="0" max="60" value="25" step="5">
+            <div class="range-labels" aria-hidden="true">
+              <span>No edits</span>
+              <span>Copy edit</span>
+              <span>Rewrite</span>
+            </div>
+          </div>
+
+          <div class="catch22-frontier">
+            <div class="frontier-map" aria-label="Detectability robustness frontier">
+              <span class="axis-arrow y-axis"><span>Robustness increases</span></span>
+              <span class="axis-arrow x-axis"><span>Keyless detectability increases</span></span>
+              <span class="frontier-line" aria-hidden="true"></span>
+              <span class="frontier-point" id="catch22-frontier-point" aria-hidden="true"></span>
+            </div>
+            <div class="frontier-readout">
+              <p class="card-kicker" id="catch22-kicker">High signal, high visibility</p>
+              <h3 id="catch22-mode-title">Biased probability watermark</h3>
+              <p id="catch22-mode-copy">
+                A strong sampling bias accumulates evidence quickly, but the same probability shift gives a keyless observer more statistical drift to exploit.
+              </p>
+            </div>
+          </div>
+
+          <div class="catch22-meters">
+            <div class="catch22-meter-card">
+              <span>Verifier evidence after edits</span>
+              <div class="meter-track"><span id="catch22-evidence-bar"></span></div>
+              <strong id="catch22-evidence-value">68%</strong>
+            </div>
+            <div class="catch22-meter-card">
+              <span>Keyless detectability</span>
+              <div class="meter-track detectability-track"><span id="catch22-detectability-bar"></span></div>
+              <strong id="catch22-detectability-value">High</strong>
+            </div>
+          </div>
+
+          <p class="catch22-note" id="catch22-note">
+            Strong evidence is useful for verification, but it also moves the text farther from the unwatermarked distribution.
+          </p>
+        </div>
+
+        <div class="content catch22-copy catch22-copy-wide">
+          <p>
+            Inference-time watermarks verify AI-generated text by embedding statistical evidence into the sampling process. The same evidence creates tension between two goals: the verifier wants the signal to survive paraphrasing and other edits, while an outsider should not be able to detect that the text is watermarked.
+          </p>
+          <p>
+            Our framework compares heterogeneous watermark families through a shared quantity: a usable KL information budget. Distribution-preserving schemes keep keyless statistical drift at zero but are brittle under edits. Probability-modifying token- and sentence-level schemes accumulate more evidence, but that evidence also increases detectability.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section primer-section" id="watermark-basics">
+      <div class="container is-max-desktop">
+        <div class="columns is-vcentered">
+          <div class="column is-5">
+            <h2 class="title is-3">A Statistical Signal, Not a Vibe Check</h2>
+            <div class="content">
+              <p>
+                A token-level watermark can be explained as a subtle statistical preference. At each generation step, the vocabulary is split into context-dependent green and red tokens. The generator softly nudges probability mass toward green tokens without forcing low-quality words.
+              </p>
+              <p>
+                Detection recomputes the same green/red split and asks whether the final text contains an unusually high green-token count. Editing and paraphrasing reduce that evidence, which is why the selector must account for the expected edit channel before choosing a watermark family.
+              </p>
+            </div>
+          </div>
+          <div class="column is-7">
+            <div class="token-demo" aria-label="Green token watermark detection example">
+              <div class="token-row">
+                <span class="token-chip green">model</span>
+                <span class="token-chip green">explains</span>
+                <span class="token-chip red">the</span>
+                <span class="token-chip green">answer</span>
+                <span class="token-chip red">with</span>
+                <span class="token-chip green">care</span>
+                <span class="token-chip green">and</span>
+                <span class="token-chip red">detail</span>
+              </div>
+              <div class="signal-panel">
+                <div class="signal-copy">
+                  <p class="card-kicker">Detector view</p>
+                  <h3>Too many green choices</h3>
+                  <p>The keyed verifier sees a statistically surprising surplus of green tokens, while a keyless outsider may also see distributional drift if the watermark modifies probabilities too aggressively.</p>
+                </div>
+                <div class="z-score-card">
+                  <span>green-token share</span>
+                  <div class="signal-bar" aria-hidden="true">
+                    <div class="signal-fill"></div>
+                  </div>
+                  <strong>5 / 8 green</strong>
+                  <small>evidence accumulates with length</small>
+                </div>
+              </div>
+              <div class="primer-steps">
+                <div><strong>1</strong><span>split vocabulary</span></div>
+                <div><strong>2</strong><span>softly bias sampling</span></div>
+                <div><strong>3</strong><span>count evidence</span></div>
+                <div><strong>4</strong><span>route by edit regime</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="theorem-markdown" aria-label="Theorem 1 derivation">
+          <p class="card-kicker">Mathematical build-up</p>
+          <h3>Theorem 1: sequence evidence accumulates from token evidence</h3>
+          <div class="equation-build">
+            <div class="equation-step">
+              <p>Start with the ordinary sampler and the watermarked sampler over the generated sequence.</p>
+              <div class="markdown-math">
+                $$P^s(y_{1:T}\mid x)=\prod_{t=1}^{T}p_t(y_t),\qquad Q(y_{1:T}\mid x)=\prod_{t=1}^{T}q_t(y_t)$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>At one step, the watermark contributes the KL gap between the two next-token distributions.</p>
+              <div class="markdown-math">
+                $$D_t=\mathrm{KL}(q_t\|p_t)=\sum_{v}q_t(v)\log\frac{q_t(v)}{p_t(v)}$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Because generation is token-by-token, these small information contributions add across the sequence.</p>
+              <div class="markdown-math">
+                $$D_{\mathrm{seq}}=\mathrm{KL}(Q\|P^s)=\sum_{t=1}^{T}D_t$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Keyless detectability is then bounded by the accumulated information.</p>
+              <div class="markdown-math">
+                $$\mathrm{TV}(P^s,Q)\le \sqrt{\frac{D_{\mathrm{seq}}}{2}}$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Plugging in the per-family one-step terms gives the qualitative frontier.</p>
+              <div class="markdown-math">
+                $$\mathrm{TV}_{\mathrm{bias}}=O(|\delta|\sqrt{T}),\qquad \mathrm{TV}_{\mathrm{sem}}=O(\sqrt{T/\ell}),\qquad \mathrm{TV}_{\mathrm{prf}}=0$$
+              </div>
+            </div>
+          </div>
+          <p class="theorem-takeaway"><strong>Interpretation.</strong> A single small nudge may be invisible, but the summed KL budget \(D_{\mathrm{seq}}\) grows with length, and the total-variation bound translates that budget into possible keyless detectability.</p>
+        </div>
+        <p class="reference-note">
+          This intuition follows the green-token watermark explanation popularized around KGW-style LLM watermarks; see the <a href="https://arize.com/blog/a-watermark-for-large-language-models/" target="_blank">Arize research reading summary</a> for a reader-friendly treatment.
+        </p>
+      </div>
+    </section>
+
+    <section class="section hero is-light" id="information-budget">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Information Budget Under Editing</h2>
+        <div class="columns">
+          <div class="column">
+            <div class="insight-card">
+              <p class="card-kicker">Detectability</p>
+              <h3>KL controls separability</h3>
+              <p>The accumulated divergence between watermarked and unwatermarked text bounds what keyless tests can distinguish, while also governing verifier-side hypothesis testing power.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="insight-card">
+              <p class="card-kicker">Robustness</p>
+              <h3>Editing shrinks evidence</h3>
+              <p>For token-level schemes, usable information contracts with the edit rate. For semantic schemes, the relevant contraction depends on the induced semantic flip rate.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="insight-card">
+              <p class="card-kicker">Selection</p>
+              <h3>No single family dominates</h3>
+              <p>The best family depends on the expected editing regime, the stealth cap, and the amount of post-edit verification power required at deployment.</p>
+            </div>
+          </div>
+        </div>
+        <div class="formula-strip">
+          <span>usable information after edits</span>
+          <div class="markdown-math" aria-label="D epsilon is approximately open parenthesis one minus epsilon close parenthesis squared D zero">
+            $$D_{\varepsilon} \approx (1-\varepsilon)^2 D_0$$
+          </div>
+          <span>for token-level schemes under the paper's edit model</span>
+        </div>
+        <div class="theorem-markdown" aria-label="Theorem 2 derivation">
+          <p class="card-kicker">Mathematical build-up</p>
+          <h3>Theorem 2: editing contracts the information budget</h3>
+          <div class="equation-build">
+            <div class="equation-step">
+              <p>Write the watermark as a small perturbation of the baseline token distribution.</p>
+              <div class="markdown-math">
+                $$q=p+r,\qquad D_0\approx \frac{1}{2}\sum_v\frac{r(v)^2}{p(v)}$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Model editing as replacing an \(\varepsilon\) fraction of tokens by an edit distribution \(R\).</p>
+              <div class="markdown-math">
+                $$p_{\varepsilon}=(1-\varepsilon)p+\varepsilon R,\qquad q_{\varepsilon}=(1-\varepsilon)q+\varepsilon R$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>The edit distribution cancels in the difference, leaving a weaker watermark perturbation.</p>
+              <div class="markdown-math">
+                $$q_{\varepsilon}-p_{\varepsilon}=(1-\varepsilon)(q-p)=(1-\varepsilon)r$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Since local KL is quadratic in the perturbation size, the retained information is squared.</p>
+              <div class="markdown-math">
+                $$D_{\varepsilon}\approx \frac{1}{2}\sum_v\frac{\big((1-\varepsilon)r(v)\big)^2}{p(v)}=(1-\varepsilon)^2D_0$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Across \(T\) tokens, the post-edit token budget is therefore</p>
+              <div class="markdown-math">
+                $$C_{\mathrm{tok}}(\varepsilon)\approx T(1-\varepsilon)^2D_0$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>Verification succeeds only while that remaining budget clears the target error threshold.</p>
+              <div class="markdown-math">
+                $$C_{\mathrm{tok}}(\varepsilon)\gtrsim \log_2(1/\beta)\quad\Longrightarrow\quad \varepsilon_{\beta}^{\mathrm{tok}}\approx 1-\sqrt{\frac{\log_2(1/\beta)}{TD_0}}$$
+              </div>
+            </div>
+            <div class="equation-step">
+              <p>For semantic schemes, replace token survival by the semantic flip rate.</p>
+              <div class="markdown-math">
+                $$C_{\mathrm{sem}}(\varepsilon)\approx T_s\big(1-2\varepsilon_s(\varepsilon)\big)^2D_0^{(\mathrm{sem})}$$
+              </div>
+            </div>
+          </div>
+          <p class="theorem-takeaway"><strong>Interpretation.</strong> Edits first shrink the watermark perturbation by \(1-\varepsilon\); KL then squares that remaining perturbation, producing the \((1-\varepsilon)^2\) contraction.</p>
+        </div>
+      </div>
+    </section>
+        </div>
+
+        <div id="panel-hybrid" class="site-tab-panel" role="tabpanel" aria-labelledby="tab-hybrid" data-site-tab-panel="hybrid" hidden>
+    <section class="section selector-demo-section hero is-light" id="selector-walkthrough">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Selector Walkthrough: One Answer, Three Deployment Routes</h2>
+        <p class="selector-intro">
+          Imagine an LFQA answer generated for public release. Before embedding the watermark, the system estimates how the answer will be edited downstream and routes it to the family that best matches that edit regime.
+        </p>
+        <div class="selector-demo" aria-live="polite">
+          <div class="route-tabs" role="tablist" aria-label="Watermark deployment routes">
+            <button class="route-tab is-active" type="button" data-route="archive" role="tab" aria-selected="true">
+              <span class="route-number">01</span>
+              Verbatim Archive
+            </button>
+            <button class="route-tab" type="button" data-route="copyedit" role="tab" aria-selected="false">
+              <span class="route-number">02</span>
+              Copy-Edited QA
+            </button>
+            <button class="route-tab" type="button" data-route="summary" role="tab" aria-selected="false">
+              <span class="route-number">03</span>
+              Summarized Explainer
+            </button>
+          </div>
+
+          <div class="selector-stage">
+            <div class="route-card">
+              <p class="card-kicker">Expected route</p>
+              <h3 id="selector-route-title">Verbatim archive release</h3>
+              <p id="selector-route-copy">
+                The answer is stored or served nearly unchanged, so the selector can use a distribution-preserving watermark whose evidence depends on preserving alignment.
+              </p>
+              <div class="edit-meter" aria-label="Estimated edit rates">
+                <div>
+                  <span>token edit rate</span>
+                  <strong id="selector-epsilon">&epsilon; &asymp; 0</strong>
+                </div>
+                <div>
+                  <span>semantic flip rate</span>
+                  <strong id="selector-epsilon-s">&epsilon;<sub>s</sub> &asymp; 0</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="selector-arrow" aria-hidden="true">
+              <span>estimate edits</span>
+              <i class="fas fa-arrow-right"></i>
+              <span>choose family</span>
+            </div>
+
+            <div class="winner-card">
+              <p class="card-kicker">Selected watermark</p>
+              <h3 id="selector-method">CGW</h3>
+              <p id="selector-family">Distribution-preserving watermark</p>
+              <div class="score-grid">
+                <div>
+                  <span>selector score</span>
+                  <strong id="selector-score">1.990</strong>
+                </div>
+                <div>
+                  <span>AUC</span>
+                  <strong id="selector-auc">0.99</strong>
+                </div>
+                <div>
+                  <span>keyless z</span>
+                  <strong id="selector-z">-5.80</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="family-board" aria-label="Candidate watermark families">
+            <div class="family-column" data-family="token">
+              <h4>Token-based</h4>
+              <p>&epsilon; &asymp; 0.25, &epsilon;<sub>s</sub> &asymp; 0.06</p>
+              <div class="method-chip" data-method="HCW">HCW: 1.137 <span>(0.910, 3.40)</span></div>
+              <div class="method-chip" data-method="DiPMark">DiPMark: 1.104 <span>(0.90, 3.90)</span></div>
+              <div class="method-chip" data-method="HeavyWater">HeavyWater: 1.072 <span>(0.880, 4.20)</span></div>
+            </div>
+            <div class="family-column" data-family="semantic">
+              <h4>Semantic-based</h4>
+              <p>&epsilon; &asymp; 0.42, &epsilon;<sub>s</sub> &asymp; 0.10</p>
+              <div class="method-chip" data-method="PMark">PMark: 1.305 <span>(0.850, 1.20)</span></div>
+              <div class="method-chip" data-method="SemStamp">SemStamp: 1.220 <span>(0.820, 1.50)</span></div>
+              <div class="method-chip" data-method="SimMark">SimMark: 1.170 <span>(0.800, 1.70)</span></div>
+            </div>
+            <div class="family-column is-selected" data-family="distribution">
+              <h4>Distribution-preserving</h4>
+              <p>&epsilon; &asymp; 0, &epsilon;<sub>s</sub> &asymp; 0</p>
+              <div class="method-chip is-winner" data-method="CGW">CGW: 1.990 <span>(0.99, -5.80)</span></div>
+            </div>
+          </div>
+          <p class="selector-note" id="selector-note">
+            This is the low-edit corner of the diagram: distribution preservation gives the strongest stealth signal when the downstream channel is expected to leave the text nearly intact.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hero is-light" id="validation">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Empirical Validation</h2>
+        <div class="columns is-vcentered">
+          <div class="column is-6">
+            <div class="content">
+              <p>
+                Experiments on Llama-2-7B and Mistral-7B evaluate clean detection and post-edit robustness under moderate Dipper rewriting and stronger summarization-style paraphrasing. The results support the theoretical prediction that watermark evidence weakens as edits remove or flip the signal.
+              </p>
+              <p>
+                Across evaluated regimes, the hybrid method tracks the strongest available family more closely than any fixed family while preserving a lower-detectability operating point than aggressively biased token-level methods.
+              </p>
+            </div>
+            <div class="metric-row">
+              <div class="metric-pill"><strong>2</strong><span>base LLMs</span></div>
+              <div class="metric-pill"><strong>14</strong><span>watermark methods</span></div>
+              <div class="metric-pill"><strong>3</strong><span>main conditions</span></div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <figure class="paper-figure compact-figure">
+              <img src="static/images/edit-rate-frontier.png" alt="Edit-rate robustness frontier for watermarking schemes" loading="lazy">
+              <figcaption>Post-edit verification weakens as the edit rate increases, exposing the high-edit boundary.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+        </div>
+
+        <div id="panel-citation" class="site-tab-panel" role="tabpanel" aria-labelledby="tab-citation" data-site-tab-panel="citation" hidden>
+    <section class="section" id="reproducibility">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Reproducibility</h2>
+        <div class="content reproducibility-content">
+          <p>
+            The code package evaluates the implemented watermark families on LFQA prompts with Llama-2-7B and Mistral-7B. A local backend is included for environment checks before full GPU reproduction.
+          </p>
+          <pre><code>python -m catch22.pipeline \
+  --config configs/llama2_lfqa.yaml \
+  --reproduction-suite \
+  --num-samples 2 \
+  --local-backend \
+  --resume</code></pre>
+          <div class="has-text-centered">
+            <a href="https://github.com/K1015/Catch-22-Pareto-Frontier-Watermark-in-LLMs" target="_blank" class="button is-rounded is-dark">
+              <span class="icon"><i class="fab fa-github"></i></span>
+              <span>Open the Reproduction Repository</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <div class="bibtex-header">
+          <h2 class="title">BibTeX</h2>
+          <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+            <i class="fas fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre id="bibtex-code"><code>@inproceedings{catch22watermarking2026,
+  title = {Catch-22: On the Fundamental Tradeoff Between Detectability and Robustness in LLM Watermarking},
+  author = {Pratihar, Kuheli and Mukhopadhyay, Debdeep},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
+  year = {2026},
+  url = {https://icml.cc/virtual/2026/poster/66807}
+}</code></pre>
+      </div>
+    </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container is-max-desktop">
+      <div class="content has-text-centered">
+        <p>
+          Website built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>, adapted for the Catch-22 ICML 2026 project page.
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
