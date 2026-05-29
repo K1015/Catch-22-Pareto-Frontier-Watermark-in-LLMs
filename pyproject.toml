@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "catch22-watermark-repro"
+version = "0.1.0"
+description = "Standalone reproduction code for Catch-22 watermarking experiments on Llama2 and Mistral."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "accelerate>=0.24.0",
+  "jsonlines>=3.1.0",
+  "numpy>=1.24.0",
+  "pandas>=2.0.0",
+  "pyyaml>=6.0",
+  "scikit-learn>=1.3.0",
+  "scipy>=1.11.0",
+  "sentencepiece>=0.1.99",
+  "torch>=2.0.0",
+  "tqdm>=4.65.0",
+  "transformers>=4.35.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
